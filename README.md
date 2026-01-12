@@ -353,7 +353,7 @@ MIT License - See [LICENSE](LICENSE) file for details
 
 ## 👤 Author
 
-**Ilyas Rufai**
+[**Ilyas Rufai**](https://github.com/rufilboss)
 
 ---
 
@@ -368,5 +368,3 @@ After completing this project, you will understand:
 ✅ Failure recovery and disaster procedures  
 ✅ Production-grade debugging techniques  
 ✅ Business impact of infrastructure failures  
-
-**This project demonstrates the skills needed for senior DevOps/SRE roles at FAANG companies.**

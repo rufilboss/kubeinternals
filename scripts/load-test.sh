@@ -116,4 +116,3 @@ echo "  kubectl top nodes"
 echo "  kubectl top pods -n $NAMESPACE"
 echo "  kubectl get hpa -n $NAMESPACE  # If HPA is configured"
 echo ""
-
