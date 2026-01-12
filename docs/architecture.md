@@ -20,6 +20,7 @@ The control plane is the brain of the Kubernetes cluster, responsible for mainta
   - Serves as the front-end for the control plane
 
 **Key Configuration**:
+
 - Audit logging enabled for compliance
 - Bind address: `0.0.0.0` (accessible from all interfaces)
 - Port: `6443` (HTTPS)
@@ -33,12 +34,14 @@ The control plane is the brain of the Kubernetes cluster, responsible for mainta
   - Single node in this setup (production should use HA)
 
 **Data Stored**:
+
 - Cluster state
 - Configuration objects
 - Secrets and ConfigMaps
 - Service endpoints
 
 **Backup Strategy**:
+
 - Automated backups every 5 minutes
 - Manual backups before major operations
 - Retention: 7 days
@@ -53,6 +56,7 @@ The control plane is the brain of the Kubernetes cluster, responsible for mainta
   - Service Account & Token Controllers
 
 **Responsibilities**:
+
 - Monitor cluster state
 - Make changes to move current state toward desired state
 - Handle node failures, pod replication, etc.
@@ -116,7 +120,7 @@ The control plane is the brain of the Kubernetes cluster, responsible for mainta
 
 ### API Service
 
-```
+```sh
 ┌─────────────────────────────────────┐
 │         API Service Pods            │
 │  ┌──────────┐  ┌──────────┐        │
@@ -131,6 +135,7 @@ The control plane is the brain of the Kubernetes cluster, responsible for mainta
 ```
 
 **Characteristics**:
+
 - **Replicas**: 3 (high availability)
 - **Resource Limits**: CPU 500m, Memory 512Mi
 - **Health Checks**: Liveness and readiness probes
@@ -139,6 +144,7 @@ The control plane is the brain of the Kubernetes cluster, responsible for mainta
 ### Worker Service
 
 **Characteristics**:
+
 - **Replicas**: 2
 - **Resource Limits**: CPU 1000m, Memory 1Gi
 - **Queue Integration**: Redis-based job queue
@@ -325,4 +331,3 @@ See [recovery-procedures.md](recovery-procedures.md) for detailed steps.
 4. **Logging Stack**: ELK or Loki
 5. **GitOps**: ArgoCD or Flux
 6. **Policy Engine**: OPA Gatekeeper
-

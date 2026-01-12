@@ -92,4 +92,3 @@ fi
 # Cleanup old backups (keep last 7 days)
 print_status "Cleaning up old backups (keeping last 7 days)..."
 find "$BACKUP_DIR" -name "etcd-backup-*.db" -mtime +7 -delete
-
