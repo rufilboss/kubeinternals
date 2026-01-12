@@ -276,6 +276,7 @@ See [docs/debugging-guide.md](docs/debugging-guide.md) for comprehensive debuggi
 **Scenario**: Control plane goes down during business hours
 
 **Impact**:
+
 - No new pods can be scheduled
 - Existing pods continue running but cannot be managed
 - Service discovery may be affected
