@@ -28,6 +28,7 @@ kubectl apply -f manifests/postgresql/
 ## Common Commands
 
 ### Cluster Status
+
 ```bash
 kubectl get nodes
 kubectl get pods -A
@@ -36,6 +37,7 @@ kubectl get events --sort-by='.lastTimestamp'
 ```
 
 ### Pod Operations
+
 ```bash
 # Get pods
 kubectl get pods -n production
@@ -52,6 +54,7 @@ kubectl exec -it <pod-name> -n production -- /bin/sh
 ```
 
 ### Service Operations
+
 ```bash
 # Get services
 kubectl get svc -n production
@@ -66,16 +69,19 @@ kubectl port-forward -n production svc/api-service 8080:80
 ## etcd Operations
 
 ### Backup
+
 ```bash
 sudo ./scripts/etcd-backup.sh
 ```
 
 ### Restore
+
 ```bash
 sudo ./scripts/etcd-restore.sh /var/backups/etcd/etcd-backup-<timestamp>.db
 ```
 
 ### Health Check
+
 ```bash
 ETCD_POD=$(kubectl get pods -n kube-system -l component=etcd -o jsonpath='{.items[0].metadata.name}')
 kubectl exec -n kube-system $ETCD_POD -- \
@@ -90,21 +96,25 @@ kubectl exec -n kube-system $ETCD_POD -- \
 ## Failure Scenarios
 
 ### Pod Eviction
+
 ```bash
 ./scripts/simulate-failures.sh pod-eviction
 ```
 
 ### Node Failure
+
 ```bash
 ./scripts/simulate-failures.sh node-failure <node-name>
 ```
 
 ### CrashLoopBackOff
+
 ```bash
 ./scripts/simulate-failures.sh crashloop api-service
 ```
 
 ### Control Plane Failure
+
 ```bash
 ./scripts/simulate-failures.sh api-server-down
 ```
@@ -112,24 +122,28 @@ kubectl exec -n kube-system $ETCD_POD -- \
 ## Debugging
 
 ### Check Pod Status
+
 ```bash
 kubectl describe pod <pod-name> -n production
 kubectl get events --field-selector involvedObject.name=<pod-name> -n production
 ```
 
 ### Check Node Status
+
 ```bash
 kubectl describe node <node-name>
 kubectl top node <node-name>
 ```
 
 ### Check Resource Usage
+
 ```bash
 kubectl top nodes
 kubectl top pods -n production
 ```
 
 ### Network Debugging
+
 ```bash
 # Test DNS
 kubectl run test-dns --image=busybox --rm -it -- \
@@ -153,18 +167,21 @@ kubectl run test-curl --image=curlimages/curl --rm -it -- \
 ## Recovery Procedures
 
 ### Pod Eviction
+
 1. Check evicted pods: `kubectl get pods -A | grep Evicted`
 2. Delete evicted pods
 3. Check node resources: `kubectl top node`
 4. Scale if needed
 
 ### Node Failure
+
 1. Cordon node: `kubectl cordon <node-name>`
 2. Drain node: `kubectl drain <node-name> --ignore-daemonsets`
 3. Replace node or fix issue
 4. Uncordon: `kubectl uncordon <node-name>`
 
 ### etcd Restore
+
 1. Stop API server
 2. Stop etcd
 3. Restore from backup: `sudo ./scripts/etcd-restore.sh <backup-file>`
@@ -195,4 +212,3 @@ alias ke='kubectl exec -it'
 - [etcd Operations](docs/etcd-operations.md)
 - [Deployment Guide](docs/deployment-guide.md)
 - [Cluster Internals](docs/cluster-internals.md)
-
