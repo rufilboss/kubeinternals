@@ -1,0 +1,121 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-service
+  namespace: production
+  labels:
+    app: api-service
+    version: v1
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: api-service
+  template:
+    metadata:
+      labels:
+        app: api-service
+        version: v1
+    spec:
+      containers:
+      - name: api
+        image: nginx:1.25-alpine
+        # In production, use your actual API image
+        # image: your-registry/api-service:latest
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        env:
+        - name: REDIS_HOST
+          value: redis-service.production.svc.cluster.local
+        - name: POSTGRES_HOST
+          value: postgres-service.production.svc.cluster.local
+        - name: POSTGRES_DB
+          value: appdb
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+          successThreshold: 1
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+          successThreshold: 1
+        volumeMounts:
+        - name: config
+          mountPath: /etc/nginx/conf.d
+      volumes:
+      - name: config
+        configMap:
+          name: api-config
+      terminationGracePeriodSeconds: 30
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-service
+  namespace: production
+  labels:
+    app: api-service
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 8080
+    protocol: TCP
+    name: http
+  selector:
+    app: api-service
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: api-config
+  namespace: production
+data:
+  default.conf: |
+    server {
+        listen 8080;
+        server_name _;
+        
+        location /health {
+            access_log off;
+            return 200 "healthy\n";
+            add_header Content-Type text/plain;
+        }
+        
+        location /ready {
+            access_log off;
+            return 200 "ready\n";
+            add_header Content-Type text/plain;
+        }
+        
+        location / {
+            return 200 "API Service v1\n";
+            add_header Content-Type text/plain;
+        }
+    }
+

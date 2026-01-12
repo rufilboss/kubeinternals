@@ -1,0 +1,48 @@
+apiVersion: kubeadm.k8s.io/v1beta3
+kind: ClusterConfiguration
+kubernetesVersion: v1.28.0
+controlPlaneEndpoint: "CONTROL_PLANE_IP:6443"
+networking:
+  podSubnet: "10.244.0.0/16"
+  serviceSubnet: "10.96.0.0/12"
+apiServer:
+  extraArgs:
+    audit-log-path: /var/log/kubernetes/audit.log
+    audit-policy-file: /etc/kubernetes/audit-policy.yaml
+  extraVolumes:
+    - name: "audit"
+      hostPath: "/var/log/kubernetes"
+      mountPath: "/var/log/kubernetes"
+      pathType: DirectoryOrCreate
+    - name: "audit-policy"
+      hostPath: "/etc/kubernetes/audit-policy.yaml"
+      mountPath: "/etc/kubernetes/audit-policy.yaml"
+      readOnly: true
+      pathType: File
+controllerManager:
+  extraArgs:
+    bind-address: "0.0.0.0"
+scheduler:
+  extraArgs:
+    bind-address: "0.0.0.0"
+etcd:
+  local:
+    dataDir: /var/lib/etcd
+---
+apiVersion: kubeadm.k8s.io/v1beta3
+kind: InitConfiguration
+localAPIEndpoint:
+  advertiseAddress: "CONTROL_PLANE_IP"
+  bindPort: 6443
+nodeRegistration:
+  criSocket: unix:///var/run/containerd/containerd.sock
+---
+apiVersion: kubelet.config.k8s.io/v1beta1
+kind: KubeletConfiguration
+cgroupDriver: systemd
+failSwapOn: false
+---
+apiVersion: kubeproxy.config.k8s.io/v1alpha1
+kind: KubeProxyConfiguration
+mode: iptables
+
