@@ -25,7 +25,7 @@ spec:
       containers:
       - name: worker
         image: busybox:1.36
-        # In production, use your actual worker image
+        # use your actual worker image
         # image: your-registry/worker-service:latest
         command:
         - sh

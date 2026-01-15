@@ -25,7 +25,7 @@ spec:
       containers:
       - name: api
         image: nginx:1.25-alpine
-        # In production, use your actual API image
+        # use your actual API image
         # image: your-registry/api-service:latest
         ports:
         - containerPort: 8080
