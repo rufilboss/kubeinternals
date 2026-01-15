@@ -78,6 +78,7 @@ nodes:
 ```
 
 Create cluster with config:
+
 ```bash
 kind create cluster --name kubeinternals --config kind-config.yaml
 ```
