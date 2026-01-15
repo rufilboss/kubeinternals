@@ -68,10 +68,10 @@ nodes:
         node-labels: "ingress-ready=true"
   extraPortMappings:
   - containerPort: 80
-    hostPort: 80
+    hostPort: 80 # I use 8080 as the port is busy
     protocol: TCP
   - containerPort: 443
-    hostPort: 443
+    hostPort: 443 #I use 8443
     protocol: TCP
 - role: worker
 - role: worker
