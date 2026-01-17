@@ -96,7 +96,8 @@ ETCDCTL_API=3 etcdctl snapshot status /var/backups/etcd/etcd-backup-<timestamp>.
 ```
 
 **Expected output**:
-```
+
+```sh
 Hash: <hash>
 Revision: <revision>
 Total Keys: <count>
@@ -108,6 +109,7 @@ Total Size: <size>
 **Recommended**: Every 5 minutes for production
 
 **Cron job example**:
+
 ```bash
 # Add to crontab
 */5 * * * * /path/to/scripts/etcd-backup.sh
@@ -375,6 +377,7 @@ kubectl top pod -n kube-system -l component=etcd
 **Symptoms**: etcd pod in `CrashLoopBackOff` or `Pending`
 
 **Debugging**:
+
 ```bash
 # Check etcd pod logs
 kubectl logs -n kube-system -l component=etcd
@@ -390,6 +393,7 @@ df -h /var/lib/etcd
 ```
 
 **Common fixes**:
+
 - Fix data directory permissions
 - Free up disk space
 - Check certificate validity
