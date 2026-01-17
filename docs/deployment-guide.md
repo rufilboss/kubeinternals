@@ -427,4 +427,3 @@ telnet <control-plane-ip> 6443
 - [Recovery Procedures](recovery-procedures.md)
 - [Debugging Guide](debugging-guide.md)
 - [etcd Operations](etcd-operations.md)
-
