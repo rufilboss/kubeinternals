@@ -19,6 +19,7 @@ Deep dive into Kubernetes cluster internals, component interactions, and data fl
 **Location**: `/etc/kubernetes/manifests/kube-apiserver.yaml`
 
 **Key Responsibilities**:
+
 1. **Authentication**: Verify user identity
 2. **Authorization**: Check permissions (RBAC, ABAC)
 3. **Admission Control**: Validate and mutate requests
@@ -43,6 +44,7 @@ Response
 ```
 
 **Key Files**:
+
 - Static pod manifest: `/etc/kubernetes/manifests/kube-apiserver.yaml`
 - Certificates: `/etc/kubernetes/pki/`
 - Audit logs: `/var/log/kubernetes/audit.log`
@@ -52,7 +54,8 @@ Response
 **Location**: `/etc/kubernetes/manifests/etcd.yaml`
 
 **Data Structure**:
-```
+
+```sh
 /registry
   /pods
     /<namespace>
@@ -68,6 +71,7 @@ Response
 ```
 
 **Key Operations**:
+
 - **Write**: All object creates/updates
 - **Read**: All object queries
 - **Watch**: Real-time change notifications
@@ -75,6 +79,7 @@ Response
 - **Defrag**: Reclaim disk space
 
 **Consistency Model**:
+
 - **Linearizable**: All operations appear to execute atomically
 - **Quorum**: Majority of nodes must agree
 - **Raft Consensus**: Ensures consistency across nodes
@@ -101,7 +106,8 @@ Response
    - Manages service account tokens
 
 **Control Loop**:
-```
+
+```sh
 Observe Current State
     ↓
 Compare with Desired State
@@ -130,7 +136,8 @@ Repeat
 3. **Binding**: Assign pod to best node
 
 **Scheduling Algorithm**:
-```
+
+```sh
 Pod Created
     ↓
 Add to Scheduler Queue
@@ -171,7 +178,8 @@ Bind Pod to Node
    - Report allocatable resources
 
 **Kubelet Process**:
-```
+
+```sh
 Watch API Server for Pod Changes
     ↓
 Sync Pod State
@@ -184,6 +192,7 @@ Report Status to API Server
 ```
 
 **Key Files**:
+
 - Kubelet config: `/var/lib/kubelet/config.yaml`
 - Pod manifests: `/var/lib/kubelet/pods/`
 - Logs: `journalctl -u kubelet`
@@ -203,7 +212,8 @@ Report Status to API Server
    - More load balancing algorithms
 
 **Service Proxy Flow**:
-```
+
+```sh
 Service Created
     ↓
 kube-proxy Watches API Server
@@ -214,7 +224,8 @@ Route Traffic to Pods
 ```
 
 **iptables Rules Structure**:
-```
+
+```sh
 PREROUTING
     ↓
 KUBE-SERVICES (Service chain)
@@ -229,12 +240,14 @@ Pod IP
 ### Container Runtime
 
 **CRI Interface**:
+
 - **Image Service**: Pull/manage images
 - **Runtime Service**: Create/start/stop containers
 - **Streaming**: Attach/exec/logs
 
 **Container Lifecycle**:
-```
+
+```sh
 Pull Image
     ↓
 Create Container
@@ -252,7 +265,7 @@ Remove Container
 
 ### Pod Creation Request
 
-```
+```sh
 1. User: kubectl apply -f pod.yaml
    ↓
 2. kubectl: POST /api/v1/namespaces/{namespace}/pods
@@ -286,7 +299,7 @@ Remove Container
 
 ### Service Request Flow
 
-```
+```sh
 1. Client Pod: DNS lookup for service
    ↓
 2. CoreDNS: Resolve service name to ClusterIP
@@ -308,7 +321,7 @@ Remove Container
 
 ### Pod States
 
-```
+```sh
 Pending
     ↓
 ContainerCreating
@@ -334,7 +347,7 @@ Succeeded / Failed
 
 ### Termination Flow
 
-```
+```sh
 1. Pod Deletion Requested
    ↓
 2. API Server: Set deletionTimestamp
@@ -357,19 +370,22 @@ Succeeded / Failed
 ### DNS Resolution
 
 **Service DNS Format**:
-```
+
+```sh
 <service-name>.<namespace>.svc.cluster.local
 ```
 
 **Example**:
-```
+
+```sh
 api-service.production.svc.cluster.local
 ```
 
 ### CoreDNS Configuration
 
 **Corefile**:
-```
+
+```sh
 .:53 {
     errors
     health {
@@ -392,11 +408,13 @@ api-service.production.svc.cluster.local
 ### Endpoint Management
 
 **Endpoints Controller**:
+
 - Watches pods and services
 - Creates Endpoints object
 - Updates when pods change
 
 **Endpoint Object**:
+
 ```yaml
 apiVersion: v1
 kind: Endpoints
@@ -414,7 +432,7 @@ subsets:
 
 ### Volume Lifecycle
 
-```
+```sh
 1. Pod Created with Volume
    ↓
 2. Kubelet: Wait for volume to be available
@@ -436,7 +454,7 @@ subsets:
 
 ### PersistentVolume (PV) Lifecycle
 
-```
+```sh
 Available
     ↓
 Bound (to PVC)
@@ -453,7 +471,8 @@ Deleted (if ReclaimPolicy=Delete)
 **Purpose**: Define storage provisioners and parameters
 
 **Provisioning Flow**:
-```
+
+```sh
 PVC Created
     ↓
 Storage Class: Find provisioner
@@ -470,6 +489,7 @@ Pod: Use PVC
 ### Pod Network
 
 **CNI Plugin Responsibilities**:
+
 1. Add network interface to pod
 2. Configure IP address
 3. Set up routes
@@ -478,11 +498,13 @@ Pod: Use PVC
 ### Calico Networking
 
 **Data Plane**:
+
 - Uses BGP for routing
 - IP-in-IP encapsulation
 - Network policies via iptables
 
 **Control Plane**:
+
 - etcd for network state
 - BGP peers for route distribution
 
@@ -499,6 +521,7 @@ Allow / Deny
 ```
 
 **iptables Chains**:
+
 - `cali-fw-*`: Forward chain rules
 - `cali-tw-*`: Output chain rules
 - `cali-pi-*`: Input chain rules
