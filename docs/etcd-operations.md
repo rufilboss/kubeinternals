@@ -404,6 +404,7 @@ df -h /var/lib/etcd
 **Symptoms**: Slow API responses, high etcd latency
 
 **Debugging**:
+
 ```bash
 # Check etcd latency
 kubectl exec -n kube-system $ETCD_POD -- \
@@ -416,6 +417,7 @@ kubectl exec -n kube-system $ETCD_POD -- \
 ```
 
 **Fixes**:
+
 - Defragment etcd
 - Check disk I/O performance
 - Increase etcd resources
@@ -427,7 +429,8 @@ kubectl exec -n kube-system $ETCD_POD -- \
 
 **In single-node setup**: Restore from backup
 
-**In multi-node setup**: 
+**In multi-node setup**:
+
 - Ensure majority of nodes are available
 - Remove failed nodes from cluster
 - Add new nodes to restore quorum
@@ -437,6 +440,7 @@ kubectl exec -n kube-system $ETCD_POD -- \
 **Symptoms**: Backup file exists but restore fails
 
 **Debugging**:
+
 ```bash
 # Check backup file integrity
 ETCDCTL_API=3 etcdctl snapshot status <backup-file>
@@ -449,6 +453,7 @@ ls -la <backup-file>
 ```
 
 **Fixes**:
+
 - Use a different backup file
 - Verify backup was created correctly
 - Check disk space for restore
@@ -470,4 +475,3 @@ ls -la <backup-file>
 - [Kubernetes etcd Documentation](https://kubernetes.io/docs/tasks/administer-cluster/configure-upgrade-etcd/)
 - [Recovery Procedures](recovery-procedures.md)
 - [Architecture Documentation](architecture.md)
-
