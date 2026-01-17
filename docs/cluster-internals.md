@@ -27,7 +27,8 @@ Deep dive into Kubernetes cluster internals, component interactions, and data fl
 5. **Storage**: Read/write to etcd
 
 **Request Flow**:
-```
+
+```sh
 Client Request
     ↓
 Authentication
@@ -510,7 +511,7 @@ Pod: Use PVC
 
 ### Network Policy Enforcement
 
-```
+```sh
 Traffic Arrives
     ↓
 Check Network Policies
@@ -574,7 +575,7 @@ Allow / Deny
 - **Cache**: Node information
 - **Parallelism**: Multiple scheduling threads
 
-### Kubelet
+### kubelet
 
 - **Sync Frequency**: How often to sync with API server
 - **Container GC**: Clean up stopped containers
