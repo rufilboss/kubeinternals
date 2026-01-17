@@ -88,6 +88,7 @@ kubectl get events --field-selector reason=FailedScheduling
 ### Recovery Steps
 
 1. **Identify Root Cause**
+
    ```bash
    # Check node resource usage
    kubectl top node <node-name>
@@ -97,6 +98,7 @@ kubectl get events --field-selector reason=FailedScheduling
    ```
 
 2. **Free Up Resources**
+
    ```bash
    # Delete evicted pods
    kubectl get pods -A -o json | \
@@ -108,17 +110,20 @@ kubectl get events --field-selector reason=FailedScheduling
    ```
 
 3. **Scale Down Non-Critical Workloads**
+
    ```bash
    kubectl scale deployment <non-critical-deployment> --replicas=0
    ```
 
 4. **Add Node or Increase Resources**
+
    ```bash
    # If using cloud provider, add node
    # Or increase node resources
    ```
 
 5. **Verify Recovery**
+
    ```bash
    kubectl get pods -A
    kubectl get nodes
@@ -157,18 +162,21 @@ kubectl describe node <node-name>
 #### Option A: Node Recoverable (Temporary Issue)
 
 1. **Check Node Connectivity**
+
    ```bash
    ssh <node-ip>
    systemctl status kubelet
    ```
 
 2. **Restart Kubelet**
+
    ```bash
    sudo systemctl restart kubelet
    sudo systemctl status kubelet
    ```
 
 3. **Verify Node Recovery**
+
    ```bash
    kubectl get nodes
    # Wait for node to become Ready
@@ -177,11 +185,13 @@ kubectl describe node <node-name>
 #### Option B: Node Unrecoverable (Permanent Failure)
 
 1. **Cordon Node** (if still accessible)
+
    ```bash
    kubectl cordon <node-name>
    ```
 
 2. **Drain Node** (evict pods gracefully)
+
    ```bash
    kubectl drain <node-name> \
      --ignore-daemonsets \
@@ -191,17 +201,20 @@ kubectl describe node <node-name>
    ```
 
 3. **Delete Node from Cluster**
+
    ```bash
    kubectl delete node <node-name>
    ```
 
 4. **Replace Node**
+
    ```bash
    # On new node, join to cluster
    sudo ./scripts/join-worker-node.sh <token> <hash> <control-plane-ip>
    ```
 
 5. **Verify Pods Rescheduled**
+
    ```bash
    kubectl get pods -A -o wide
    # Ensure all pods are running on healthy nodes
@@ -237,11 +250,13 @@ systemctl status containerd
 ### Recovery Steps
 
 1. **Access Control Plane Node**
+
    ```bash
    ssh <control-plane-ip>
    ```
 
 2. **Check Component Status**
+
    ```bash
    # Check static pods
    ls -la /etc/kubernetes/manifests/
@@ -254,6 +269,7 @@ systemctl status containerd
 3. **Restart Failed Components**
 
    **API Server:**
+
    ```bash
    # Check if manifest exists
    ls /etc/kubernetes/manifests/kube-apiserver.yaml
@@ -267,16 +283,19 @@ systemctl status containerd
    ```
 
    **Controller Manager:**
+
    ```bash
    sudo systemctl restart kubelet
    ```
 
    **Scheduler:**
+
    ```bash
    sudo systemctl restart kubelet
    ```
 
 4. **Verify API Server**
+
    ```bash
    # Wait 30-60 seconds
    kubectl get nodes
@@ -284,6 +303,7 @@ systemctl status containerd
    ```
 
 5. **Check Cluster Health**
+
    ```bash
    kubectl get componentstatuses
    kubectl get nodes
@@ -324,11 +344,13 @@ kubectl exec -n kube-system <etcd-pod-name> -- \
 #### Option A: etcd Pod Restart (No Data Loss)
 
 1. **Check etcd Status**
+
    ```bash
    kubectl get pods -n kube-system -l component=etcd
    ```
 
 2. **Restart etcd**
+
    ```bash
    # On control plane node
    sudo systemctl restart kubelet
@@ -342,6 +364,7 @@ kubectl exec -n kube-system <etcd-pod-name> -- \
    ```
 
 3. **Verify etcd Health**
+
    ```bash
    kubectl exec -n kube-system <etcd-pod-name> -- \
      sh -c "ETCDCTL_API=3 etcdctl \
@@ -355,6 +378,7 @@ kubectl exec -n kube-system <etcd-pod-name> -- \
 #### Option B: etcd Restore from Backup (Data Loss)
 
 1. **Stop API Server**
+
    ```bash
    # On control plane node
    sudo mv /etc/kubernetes/manifests/kube-apiserver.yaml \
@@ -362,12 +386,14 @@ kubectl exec -n kube-system <etcd-pod-name> -- \
    ```
 
 2. **Stop etcd**
+
    ```bash
    sudo mv /etc/kubernetes/manifests/etcd.yaml \
           /etc/kubernetes/manifests/etcd.yaml.backup
    ```
 
 3. **Restore etcd from Backup**
+
    ```bash
    # Use restore script
    sudo ./scripts/etcd-restore.sh /var/backups/etcd/etcd-backup-<timestamp>.db
