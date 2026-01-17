@@ -633,4 +633,3 @@ ip addr show
 - [etcd Documentation](https://etcd.io/docs/)
 - [CNI Specification](https://github.com/containernetworking/cni)
 - [CRI Specification](https://github.com/kubernetes/cri-api)
-
