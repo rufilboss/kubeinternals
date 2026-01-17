@@ -405,12 +405,14 @@ kubectl exec -n kube-system <etcd-pod-name> -- \
    ```
 
 4. **Restart API Server**
+
    ```bash
    sudo mv /etc/kubernetes/manifests/kube-apiserver.yaml.backup \
           /etc/kubernetes/manifests/kube-apiserver.yaml
    ```
 
 5. **Verify Cluster**
+
    ```bash
    kubectl get nodes
    kubectl get pods -A
@@ -448,6 +450,7 @@ kubectl logs <pod-name> -n <namespace> --previous  # Previous container instance
 ### Recovery Steps
 
 1. **Identify Root Cause**
+
    ```bash
    # Get detailed pod information
    kubectl describe pod <pod-name> -n <namespace>
@@ -462,6 +465,7 @@ kubectl logs <pod-name> -n <namespace> --previous  # Previous container instance
 2. **Common Causes and Fixes**
 
    **Application Error:**
+
    ```bash
    # Fix application code/config
    # Update deployment
@@ -470,6 +474,7 @@ kubectl logs <pod-name> -n <namespace> --previous  # Previous container instance
    ```
 
    **Configuration Error:**
+
    ```bash
    # Check ConfigMap/Secret
    kubectl get configmap <configmap-name> -n <namespace> -o yaml
@@ -480,6 +485,7 @@ kubectl logs <pod-name> -n <namespace> --previous  # Previous container instance
    ```
 
    **Resource Limits:**
+
    ```bash
    # Check resource usage
    kubectl top pod <pod-name> -n <namespace>
@@ -489,6 +495,7 @@ kubectl logs <pod-name> -n <namespace> --previous  # Previous container instance
    ```
 
    **Missing Dependencies:**
+
    ```bash
    # Check if dependent services are running
    kubectl get svc -n <namespace>
@@ -496,6 +503,7 @@ kubectl logs <pod-name> -n <namespace> --previous  # Previous container instance
    ```
 
 3. **Temporary Workaround**
+
    ```bash
    # Delete pod to force recreation
    kubectl delete pod <pod-name> -n <namespace>
@@ -505,6 +513,7 @@ kubectl logs <pod-name> -n <namespace> --previous  # Previous container instance
    ```
 
 4. **Verify Recovery**
+
    ```bash
    kubectl get pods -n <namespace>
    kubectl logs <pod-name> -n <namespace> -f
@@ -542,6 +551,7 @@ kubectl get endpoints -A
 ### Recovery Steps
 
 1. **Identify Partition Scope**
+
    ```bash
    # Check which nodes are affected
    kubectl get nodes -o wide
@@ -554,6 +564,7 @@ kubectl get endpoints -A
 2. **Fix Network Issues**
 
    **Firewall Rules:**
+
    ```bash
    # Check iptables
    sudo iptables -L -n
@@ -563,6 +574,7 @@ kubectl get endpoints -A
    ```
 
    **Network Policies:**
+
    ```bash
    # Check network policies
    kubectl get networkpolicies -A
@@ -572,12 +584,14 @@ kubectl get endpoints -A
    ```
 
    **CNI Plugin:**
+
    ```bash
    # Restart CNI pods
    kubectl delete pods -n kube-system -l k8s-app=calico-node
    ```
 
 3. **Verify Connectivity**
+
    ```bash
    # Test pod-to-pod communication
    kubectl run test-pod --image=busybox --rm -it -- sh
@@ -688,4 +702,3 @@ After each incident, document:
 - [etcd Operations Guide](etcd-operations.md)
 - [Debugging Guide](debugging-guide.md)
 - [Architecture Documentation](architecture.md)
-
