@@ -6,7 +6,7 @@ This document describes the architecture diagrams for the Kubernetes cluster. Us
 
 ### High-Level Cluster Topology
 
-```
+```sh
 ┌─────────────────────────────────────────────────────────────┐
 │                    Kubernetes Cluster                        │
 ├─────────────────────────────────────────────────────────────┤
@@ -59,7 +59,7 @@ This document describes the architecture diagrams for the Kubernetes cluster. Us
 
 ### Pod Creation Flow
 
-```
+```sh
 User (kubectl)
     │
     │ POST /api/v1/namespaces/production/pods
@@ -112,7 +112,7 @@ User (kubectl)
 
 ### Service Request Flow
 
-```
+```sh
 Client Pod
     │
     │ DNS Query: api-service.production.svc.cluster.local
@@ -179,7 +179,7 @@ Client Pod
 
 ## Network Architecture
 
-```
+```sh
 ┌─────────────────────────────────────────────────────────────┐
 │                      Pod Network                             │
 │                   10.244.0.0/16                              │
@@ -204,7 +204,7 @@ Client Pod
 
 ## etcd Data Structure
 
-```
+```sh
 /registry
 │
 ├── pods
@@ -234,7 +234,7 @@ Client Pod
 
 ## Failure Recovery Flow
 
-```
+```sh
 Failure Detected
     │
     ▼
@@ -314,7 +314,7 @@ Worker2 --> Kubelet2
 
 ### Using draw.io
 
-1. Go to https://app.diagrams.net/
+1. Go to [https://app.diagrams.net/](https://app.diagrams.net/)
 2. Create new diagram
 3. Use the descriptions above to create visual representations
 4. Export as PNG or SVG
@@ -329,4 +329,3 @@ Worker2 --> Kubelet2
 - [ ] Failure recovery flow diagram
 - [ ] Pod lifecycle diagram
 - [ ] Service discovery diagram
-
