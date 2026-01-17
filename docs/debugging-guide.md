@@ -100,17 +100,20 @@ kubectl logs <pod-name> -n <namespace> --timestamps
 **Debugging Steps**:
 
 1. **Check pod status**
+
    ```bash
    kubectl describe pod <pod-name> -n <namespace>
    ```
 
 2. **Check logs**
+
    ```bash
    kubectl logs <pod-name> -n <namespace>
    kubectl logs <pod-name> -n <namespace> --previous
    ```
 
 3. **Check events**
+
    ```bash
    kubectl get events --field-selector involvedObject.name=<pod-name> -n <namespace>
    ```
@@ -123,6 +126,7 @@ kubectl logs <pod-name> -n <namespace> --timestamps
    - Image pull error
 
 **Example Debug Session**:
+
 ```bash
 # Get pod details
 kubectl describe pod api-service-xxx -n production
@@ -144,6 +148,7 @@ kubectl top pod api-service-xxx -n production
 **Debugging Steps**:
 
 1. **Check why pod is pending**
+
    ```bash
    kubectl describe pod <pod-name> -n <namespace>
    # Look for "Events" section
@@ -157,6 +162,7 @@ kubectl top pod api-service-xxx -n production
    - No nodes available
 
 **Example**:
+
 ```bash
 # Check events
 kubectl describe pod my-pod -n production | grep -A 10 Events
@@ -175,11 +181,13 @@ kubectl get pvc -n production
 **Debugging Steps**:
 
 1. **Check image name**
+
    ```bash
    kubectl describe pod <pod-name> -n <namespace> | grep Image
    ```
 
 2. **Test image pull manually**
+
    ```bash
    docker pull <image-name>
    # or
@@ -187,12 +195,14 @@ kubectl get pvc -n production
    ```
 
 3. **Check image pull secrets**
+
    ```bash
    kubectl get secrets -n <namespace>
    kubectl describe pod <pod-name> -n <namespace> | grep -i secret
    ```
 
 **Fix**:
+
 ```bash
 # Update image
 kubectl set image deployment/<deployment-name> \
@@ -210,28 +220,33 @@ kubectl patch deployment <deployment-name> -n <namespace> \
 **Debugging Steps**:
 
 1. **Check service endpoints**
+
    ```bash
    kubectl get endpoints <service-name> -n <namespace>
    kubectl describe svc <service-name> -n <namespace>
    ```
 
 2. **Check pod labels match service selector**
+
    ```bash
    kubectl get svc <service-name> -n <namespace> -o yaml | grep selector
    kubectl get pods -n <namespace> --show-labels
    ```
 
 3. **Test DNS resolution**
+
    ```bash
    kubectl run test-pod --image=busybox --rm -it -- nslookup <service-name>.<namespace>.svc.cluster.local
    ```
 
 4. **Test connectivity**
+
    ```bash
    kubectl run test-pod --image=busybox --rm -it -- wget -O- http://<service-name>.<namespace>.svc.cluster.local
    ```
 
 **Example**:
+
 ```bash
 # Check service
 kubectl get svc api-service -n production
@@ -303,6 +318,7 @@ kubectl top node <node-name>
 ### Node Issues
 
 **Node NotReady**:
+
 ```bash
 # Check kubelet status (on node)
 sudo systemctl status kubelet
@@ -318,6 +334,7 @@ kubectl describe node <node-name> | grep -A 5 Conditions
 ```
 
 **Resource Pressure**:
+
 ```bash
 # Check node resources
 kubectl describe node <node-name> | grep -A 10 "Allocated resources"
@@ -585,4 +602,3 @@ kubectl run test-curl --image=curlimages/curl --rm -it -- \
 - [kubectl Cheat Sheet](https://kubernetes.io/docs/reference/kubectl/cheatsheet/)
 - [Recovery Procedures](recovery-procedures.md)
 - [Architecture Documentation](architecture.md)
-
